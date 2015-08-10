@@ -1,0 +1,6 @@
+*-init.clj
+*.iml
+.idea
+.DS_Store
+resources/public/js
+figwheel_server.log

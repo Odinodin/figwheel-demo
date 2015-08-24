@@ -5,36 +5,45 @@
 
 (enable-console-print!)
 
-(defonce state (atom [{:name "Mr Monkey" :age 5}
-                  {:name "Miss Giraffe" :age 20}]))
+(defonce state (atom [{:name "Apekatt" :age 10}
+                  {:name "Giraff" :age 20}]))
 
-(q/defcomponent Title [text]
-                (d/h1 {} text))
-
-(q/defcomponent AnimalTableRow [animal]
+(q/defcomponent AnimalTableRow
+                [animal]
                 (d/tr {}
                       (d/td {} (:name animal))
                       (d/td {} (:age animal))))
 
 (q/defcomponent AnimalTable [animals]
-
                 (d/table
-                  {:style {:border-collapse "collapse"}}
+                  {:style {:borderCollapse "collapse"}}
                   (d/thead
-                    {:style {:background-color "grey" }}
+                    {:style {:backgroundColor "grey"}}
                     (d/tr
                       {}
-                      (d/th {} "Name")
-                      (d/th {} "Age")))
+                      (d/th {} "Navn")
+                      (d/th {} "Alder")))
                   (d/tbody {}
                            (map #(AnimalTableRow %) animals))))
+
+(q/defcomponent Button []
+                (d/button {:onClick (fn []
+                                      (swap! state #(conj % {:name "Tilfeldig dyr" :age (rand-int 10)})))}
+                          "Legg til tilfeldig dyr"))
+
+#_(defn uppercaseName [animal]
+  (assoc animal :name (.toUpperCase (:name animal)))  )
 
 (defn render []
   (prn "rendering ... ")
   (q/render
     (d/div {}
-           #_(Title "There are animals!")
+           #_(Button)
            #_(AnimalTable @state))
     (.getElementById js/document "main")))
 
 (render)
+
+(add-watch state :watcher
+           (fn [_ _ _ _]
+             (render)))
